@@ -106,6 +106,7 @@ int _tmain(int argc, char* argv[])
 
     // Jeremy fiddled with all this -- 20170526
     double total = 0; // just keep track of the total kmer count
+    uint64 total_unique = 0; // _total_kmers does not enforce the minimum count...
     uint32 unique_len;
 
 		if (_mode) //quake compatible mode
@@ -114,6 +115,7 @@ int _tmain(int argc, char* argv[])
 			while (kmer_data_base.ReadNextKmer(kmer_object, counter))
 			{
         total = total + counter;
+        if(counter > 0) total_unique = total_unique + 1;
         /*
 				kmer_object.to_string(str);
 				str[_kmer_length] = '\t';				
@@ -129,6 +131,7 @@ int _tmain(int argc, char* argv[])
 			while (kmer_data_base.ReadNextKmer(kmer_object, counter))
 			{
         total = total + counter;
+        if(counter > 0) total_unique = total_unique + 1;
         /*
 				kmer_object.to_string(str);
 				str[_kmer_length] = '\t';
@@ -139,7 +142,7 @@ int _tmain(int argc, char* argv[])
 			}
 		}
 
-		unique_len = CNumericConversions::Int2PChar(_total_kmers, (uchar*)str); //write _total_kmers as string
+		unique_len = CNumericConversions::Int2PChar(total_unique, (uchar*)str); //write total_unique as string
     str[unique_len] = '\t';
 		counter_len = CNumericConversions::Double2PChar(total, 6, (uchar*)str + unique_len + 1); //write total kmer counts as string with 6 decimal points
     str[counter_len + 1 + unique_len] = '\n';
